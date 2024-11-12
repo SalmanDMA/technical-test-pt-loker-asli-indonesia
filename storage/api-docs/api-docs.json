@@ -1,0 +1,301 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API",
+        "version": "0.1"
+    },
+    "paths": {
+        "/api/approval-stages": {
+            "post": {
+                "tags": [
+                    "Approval Stages"
+                ],
+                "summary": "Create a new approval stage",
+                "description": "Stores a new approval stage and returns the created data.",
+                "operationId": "storeApprovalStage",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "approver_id": {
+                                        "description": "tersedia di tabel approvers, unik satu sama lain",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Approval stage created successfully"
+                    },
+                    "500": {
+                        "description": "Database error"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/approval-stages/{id}": {
+            "put": {
+                "tags": [
+                    "Approval Stages"
+                ],
+                "summary": "Update an existing approval stage",
+                "description": "Updates an approval stage by ID and returns the updated data.",
+                "operationId": "updateApprovalStage",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the approval stage to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "_method": {
+                                        "description": "HTTP method override",
+                                        "type": "string",
+                                        "example": "PUT"
+                                    },
+                                    "approver_id": {
+                                        "description": "tersedia di tabel approvers, unik satu sama lain",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Approval stage updated successfully"
+                    },
+                    "500": {
+                        "description": "Database error"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/approvers": {
+            "post": {
+                "tags": [
+                    "Approvers"
+                ],
+                "summary": "Create a new approver",
+                "description": "Stores a new approver and returns the created approver data.",
+                "operationId": "storeApprover",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Ana"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Approver created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Ana"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Database error"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/expenses": {
+            "post": {
+                "tags": [
+                    "Expenses"
+                ],
+                "summary": "Create a new expense",
+                "description": "Stores a new expense and returns the created expense data.",
+                "operationId": "storeExpense",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "amount": {
+                                        "description": "Jumlah pengeluaran dengan minimal value 1",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Expense created successfully"
+                    },
+                    "500": {
+                        "description": "Database error"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/expenses/{id}/approve": {
+            "post": {
+                "tags": [
+                    "Expenses"
+                ],
+                "summary": "Approve an expense",
+                "description": "Approves a specified expense if the approver is authorized for the current stage.",
+                "operationId": "approveExpense",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the expense to approve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "_method": {
+                                        "description": "Method override for PATCH request",
+                                        "type": "string",
+                                        "example": "PATCH"
+                                    },
+                                    "approver_id": {
+                                        "description": "ID of the approver for the current stage",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Expense approved successfully"
+                    },
+                    "500": {
+                        "description": "Database error"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/expenses/{id}": {
+            "get": {
+                "tags": [
+                    "Expenses"
+                ],
+                "summary": "Get an expense",
+                "description": "Retrieve details of a specified expense by ID.",
+                "operationId": "getExpense",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the expense to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Expense details retrieved successfully"
+                    },
+                    "404": {
+                        "description": "Expense not found"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Approval Stages",
+            "description": "API for managing approval stages"
+        },
+        {
+            "name": "Approvers",
+            "description": "API for managing approvers"
+        },
+        {
+            "name": "Expenses",
+            "description": "API for managing expenses and their approvals"
+        }
+    ]
+}
